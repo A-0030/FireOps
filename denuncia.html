@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Denúncia - FireOps</title>
+  <style>
+    :root {
+      --primary: #d32f2f;
+      --primary-dark: #b71c1c;
+      --accent: #ffcd38;
+      --text: #ffffff;
+      --text-secondary: #ffebee;
+      --card-bg: rgba(255, 255, 255, 0.1);
+      --input-bg: rgba(255, 255, 255, 0.15);
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', Arial, sans-serif;
+    }
+    
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+    
+    body {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+    
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+    }
+    
+    .back-btn {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 24px;
+      cursor: pointer;
+    }
+    
+    .page-title {
+      text-align: center;
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      background: linear-gradient(to right, var(--text), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .page-subtitle {
+      text-align: center;
+      color: var(--text-secondary);
+      margin-bottom: 30px;
+      font-size: 16px;
+    }
+    
+    .report-form {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 25px;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+    }
+    
+    .form-group {
+      margin-bottom: 20px;
+    }
+    
+    .form-group label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 500;
+      font-size: 15px;
+    }
+    
+    .form-group input,
+    .form-group textarea,
+    .form-group select {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 10px;
+      border: none;
+      background: var(--input-bg);
+      color: black;
+      font-size: 16px;
+      transition: all 0.3s ease;
+    }
+    
+    .form-group input:focus,
+    .form-group textarea:focus,
+    .form-group select:focus {
+      outline: none;
+      box-shadow: 0 0 0 2px var(--accent);
+    }
+    
+    .form-group textarea {
+      min-height: 150px;
+      resize: vertical;
+    }
+    
+    .submit-btn {
+      width: 100%;
+      padding: 16px;
+      background: var(--accent);
+      color: var(--primary-dark);
+      border: none;
+      border-radius: 10px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+    
+    .submit-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(255, 205, 56, 0.4);
+    }
+    
+    .emergency-types {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    
+    .emergency-option {
+      background: var(--input-bg);
+      border-radius: 8px;
+      padding: 12px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .emergency-option.selected {
+      background: var(--accent);
+      color: var(--primary-dark);
+      font-weight: 600;
+    }
+    
+    .emergency-option i {
+      font-size: 24px;
+      display: block;
+      margin-bottom: 5px;
+    }
+    
+    .confirmation-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .modal-content {
+      background: var(--primary-dark);
+      border-radius: 16px;
+      padding: 30px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      animation: modalFadeIn 0.3s;
+    }
+    
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: scale(0.9); }
+      to { opacity: 1; transform: scale(1); }
+    }
+    
+    .modal-icon {
+      font-size: 50px;
+      color: var(--accent);
+      margin-bottom: 20px;
+    }
+    
+    .modal-buttons {
+      display: flex;
+      gap: 15px;
+      margin-top: 25px;
+    }
+    
+    .modal-btn {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      font-weight: 600;
+      cursor: pointer;
+    }
+    
+    .modal-btn-primary {
+      background: var(--accent);
+      color: var(--primary-dark);
+    }
+    
+    .modal-btn-secondary {
+      background: var(--card-bg);
+      color: var(--text);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <button class="back-btn" onclick="navegar('menu')">←</button>
+    </header>
+    
+    <h1 class="page-title">Reportar Emergência</h1>
+    <p class="page-subtitle">Informe detalhes sobre a ocorrência para acionamento rápido</p>
+    
+    <div class="report-form">
+      <div class="form-group">
+        <label for="emergency-type">Tipo de Emergência</label>
+        <div class="emergency-types">
+          <div class="emergency-option" onclick="selectEmergency(this, 'fire')">
+            <div>🔥</div>
+            <div>Incêndio</div>
+          </div>
+          <div class="emergency-option" onclick="selectEmergency(this, 'rescue')">
+            <div>🚑</div>
+            <div>Resgate</div>
+          </div>
+          <div class="emergency-option" onclick="selectEmergency(this, 'accident')">
+            <div>🚨</div>
+            <div>Acidente</div>
+          </div>
+          <div class="emergency-option" onclick="selectEmergency(this, 'other')">
+            <div>⚠️</div>
+            <div>Outros</div>
+          </div>
+        </div>
+        <input type="hidden" id="emergency-type" value="">
+      </div>
+      
+      <div class="form-group">
+        <label for="location">Localização exata</label>
+        <input type="text" id="location" placeholder="Ex: Rua das Flores, 123 - Centro">
+      </div>
+      
+      <div class="form-group">
+        <label for="description">Descrição detalhada</label>
+        <textarea id="description" placeholder="Descreva com precisão o que está acontecendo..."></textarea>
+      </div>
+      
+      <div class="form-group">
+        <label for="severity">Nível de gravidade</label>
+        <select id="severity">
+          <option value="">Selecione a gravidade</option>
+          <option value="low">Baixa</option>
+          <option value="medium">Média</option>
+          <option value="high">Alta</option>
+          <option value="critical">Crítica</option>
+        </select>
+      </div>
+      
+      <button class="submit-btn" onclick="submitReport()">
+        <span>🚨</span> Enviar Denúncia
+      </button>
+    </div>
+  </div>
+  
+  <div class="confirmation-modal" id="confirmation-modal">
+    <div class="modal-content">
+      <div class="modal-icon">✅</div>
+      <h3>Denúncia Registrada!</h3>
+      <p>Sua emergência foi reportada com sucesso. Nossa equipe já foi acionada.</p>
+      <div class="modal-buttons">
+        <button class="modal-btn modal-btn-secondary" onclick="closeModal()">Fechar</button>
+        <button class="modal-btn modal-btn-primary" onclick="navegar('mapa')">Ver no Mapa</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Função para navegação
+    function navegar(pagina) {
+      if (window.AndroidInterface && typeof window.AndroidInterface.postMessage === 'function') {
+        window.AndroidInterface.postMessage(`abrir:${pagina}`);
+      } else {
+        // Fallback para teste no navegador
+        window.location.href = `${pagina}.html`;
+      }
+    }
+    
+    // Selecionar tipo de emergência
+    function selectEmergency(element, type) {
+      document.querySelectorAll('.emergency-option').forEach(opt => {
+        opt.classList.remove('selected');
+      });
+      element.classList.add('selected');
+      document.getElementById('emergency-type').value = type;
+    }
+    
+    // Enviar denúncia
+    function submitReport() {
+      const emergencyType = document.getElementById('emergency-type').value;
+      const location = document.getElementById('location').value;
+      const description = document.getElementById('description').value;
+      const severity = document.getElementById('severity').value;
+      
+      // Validação básica
+      if (!emergencyType || !location || !description || !severity) {
+        alert('Por favor, preencha todos os campos obrigatórios!');
+        return;
+      }
+      
+      // Criar objeto com os dados
+      const reportData = {
+        type: emergencyType,
+        location: location,
+        description: description,
+        severity: severity,
+        timestamp: new Date().toISOString()
+      };
+      
+      // Enviar para o Kodular
+      if (window.AndroidInterface && typeof window.AndroidInterface.postMessage === 'function') {
+        window.AndroidInterface.postMessage(`denuncia:${JSON.stringify(reportData)}`);
+      } else {
+        console.log('Dados da denúncia:', reportData);
+      }
+      
+      // Mostrar confirmação
+      document.getElementById('confirmation-modal').style.display = 'flex';
+    }
+    
+    // Fechar modal
+    function closeModal() {
+      document.getElementById('confirmation-modal').style.display = 'none';
+      // Limpar formulário
+      document.querySelectorAll('.emergency-option').forEach(opt => {
+        opt.classList.remove('selected');
+      });
+      document.getElementById('location').value = '';
+      document.getElementById('description').value = '';
+      document.getElementById('severity').value = '';
+    }
+    
+    // Permitir enviar com Enter no textarea
+    document.getElementById('description').addEventListener('keydown', function(e) {
+      if (e.key === 'Enter' && e.ctrlKey) {
+        e.preventDefault();
+        submitReport();
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Estatísticas - FireOps</title>
+  <style>
+    :root {
+      --primary: #1a237e;
+      --primary-dark: #0d1440;
+      --accent: #00e5ff;
+      --text: #ffffff;
+      --card-bg: rgba(255, 255, 255, 0.08);
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', Arial, sans-serif;
+    }
+    
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+    
+    body {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+    
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 40px;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+    }
+    
+    .logo img {
+      height: 40px;
+      margin-right: 10px;
+    }
+    
+    .logo-text {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    
+    .back-btn {
+      background: var(--card-bg);
+      border: none;
+      color: var(--text);
+      padding: 10px 20px;
+      border-radius: 50px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      font-weight: 500;
+    }
+    
+    .back-btn:hover {
+      background: rgba(255, 255, 255, 0.15);
+    }
+    
+    h1 {
+      text-align: center;
+      margin-bottom: 40px;
+      font-size: 2.5rem;
+      font-weight: 700;
+      background: linear-gradient(to right, var(--text), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+    
+    .stat-card {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 30px;
+      text-align: center;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .stat-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+    
+    .stat-icon {
+      font-size: 40px;
+      margin-bottom: 15px;
+      color: var(--accent);
+    }
+    
+    .stat-value {
+      font-size: 2.5rem;
+      font-weight: 700;
+      margin: 15px 0;
+      color: var(--accent);
+    }
+    
+    .stat-label {
+      font-size: 1rem;
+      opacity: 0.8;
+    }
+    
+    .chart-container {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 30px;
+      margin-top: 30px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .chart-title {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 1.3rem;
+    }
+    
+    canvas {
+      width: 100% !important;
+      height: auto !important;
+    }
+    
+    .updated-time {
+      text-align: right;
+      margin-top: 20px;
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+    
+    @media (max-width: 768px) {
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      .stat-value {
+        font-size: 2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <img src="Fire.png" alt="FireOps Logo">
+        <span class="logo-text">FIREOPS</span>
+      </div>
+      <button class="back-btn" onclick="navegar('menu')">
+        ← Voltar ao Menu
+      </button>
+    </header>
+    
+    <h1>Estatísticas Operacionais</h1>
+    
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">🚨</div>
+        <div class="stat-value" id="ocorrencias-hoje">0</div>
+        <div class="stat-label">Ocorrências hoje</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">📈</div>
+        <div class="stat-value" id="total-denuncias">0</div>
+        <div class="stat-label">Total de denúncias</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">👥</div>
+        <div class="stat-value" id="usuarios-ativos">0</div>
+        <div class="stat-label">Usuários ativos</div>
+      </div>
+      
+      <div class="stat-card">
+        <div class="stat-icon">⏱️</div>
+        <div class="stat-value" id="media-resposta">0min</div>
+        <div class="stat-label">Média de resposta</div>
+      </div>
+    </div>
+    
+    <div class="chart-container">
+      <h3 class="chart-title">Ocorrências nos últimos 7 dias</h3>
+      <canvas id="ocorrenciasChart"></canvas>
+    </div>
+    
+    <div class="updated-time" id="atualizado-em">
+      Atualizado em: carregando...
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script>
+    // Função para navegação
+    function navegar(pagina) {
+      if (window.AndroidInterface && typeof window.AndroidInterface.postMessage === 'function') {
+        window.AndroidInterface.postMessage(`abrir:${pagina}`);
+      } else {
+        // Fallback para teste no navegador
+        window.location.href = `${pagina}.html`;
+      }
+    }
+    
+    // Simular dados (substituir por dados reais do Kodular)
+    function carregarDados() {
+      // Dados simulados - no Kodular você receberá esses dados do backend
+      const dados = {
+        ocorrenciasHoje: 24,
+        totalDenuncias: 1587,
+        usuariosAtivos: 342,
+        mediaResposta: 8.5,
+        ocorrenciasSemana: [15, 22, 18, 24, 19, 27, 23],
+        atualizadoEm: new Date().toLocaleString()
+      };
+      
+      // Atualizar os valores na tela
+      document.getElementById('ocorrencias-hoje').textContent = dados.ocorrenciasHoje;
+      document.getElementById('total-denuncias').textContent = dados.totalDenuncias;
+      document.getElementById('usuarios-ativos').textContent = dados.usuariosAtivos;
+      document.getElementById('media-resposta').textContent = dados.mediaResposta + 'min';
+      document.getElementById('atualizado-em').textContent = 'Atualizado em: ' + dados.atualizadoEm;
+      
+      // Criar gráfico
+      criarGrafico(dados.ocorrenciasSemana);
+      
+      // No Kodular, você receberia os dados assim:
+      // window.AndroidInterface?.postMessage('solicitar:dados_estatisticos');
+    }
+    
+    // Criar gráfico de ocorrências
+    function criarGrafico(dadosSemana) {
+      const ctx = document.getElementById('ocorrenciasChart').getContext('2d');
+      const diasSemana = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
+      
+      new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: diasSemana,
+          datasets: [{
+            label: 'Ocorrências',
+            data: dadosSemana,
+            backgroundColor: 'rgba(0, 229, 255, 0.7)',
+            borderColor: 'rgba(0, 229, 255, 1)',
+            borderWidth: 1
+          }]
+        },
+        options: {
+          responsive: true,
+          scales: {
+            y: {
+              beginAtZero: true,
+              grid: {
+                color: 'rgba(255, 255, 255, 0.1)'
+              },
+              ticks: {
+                color: 'rgba(255, 255, 255, 0.7)'
+              }
+            },
+            x: {
+              grid: {
+                color: 'rgba(255, 255, 255, 0.1)'
+              },
+              ticks: {
+                color: 'rgba(255, 255, 255, 0.7)'
+              }
+            }
+          },
+          plugins: {
+            legend: {
+              labels: {
+                color: 'rgba(255, 255, 255, 0.7)'
+              }
+            }
+          }
+        }
+      });
+    }
+    
+    // Carregar dados quando a página é aberta
+    document.addEventListener('DOMContentLoaded', carregarDados);
+    
+    // No Kodular, você receberia os dados assim:
+    // window.receiveData = function(data) {
+    //   const dados = JSON.parse(data);
+    //   // Atualizar a interface com os dados recebidos
+    // };
+  </script>
+</body>
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FireOps - Menu Principal</title>
+  <style>
+    :root {
+      --primary: #d32f2f;
+      --primary-dark: #9a0007;
+      --accent: #ffd600;
+      --text: #ffffff;
+      --text-secondary: #ffcdd2;
+      --card-bg: rgba(255, 255, 255, 0.08);
+      --card-hover: rgba(255, 255, 255, 0.15);
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', Arial, sans-serif;
+    }
+    
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+    
+    body {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: var(--text);
+      min-height: 100vh;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      padding: 20px 0;
+    }
+    
+    .logo {
+      display: flex;
+      align-items: center;
+    }
+    
+    .logo img {
+      height: 40px;
+      margin-right: 10px;
+    }
+    
+    .logo-text {
+      font-size: 24px;
+      font-weight: 700;
+      background: linear-gradient(to right, var(--text), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .user-profile {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: var(--card-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+    
+    .user-profile:hover {
+      background: var(--card-hover);
+      transform: scale(1.05);
+    }
+    
+    .page-title {
+      text-align: center;
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 10px;
+      background: linear-gradient(to right, var(--text), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .page-subtitle {
+      text-align: center;
+      color: var(--text-secondary);
+      margin-bottom: 40px;
+      font-size: 16px;
+    }
+    
+    .menu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 20px;
+      padding: 0 20px;
+    }
+    
+    .menu-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      padding: 25px 15px;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      aspect-ratio: 1/1;
+    }
+    
+    .menu-card:hover {
+      background: var(--card-hover);
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+    
+    .menu-icon {
+      font-size: 32px;
+      margin-bottom: 15px;
+      transition: all 0.3s ease;
+    }
+    
+    .menu-card:hover .menu-icon {
+      transform: scale(1.2);
+    }
+    
+    .menu-title {
+      font-weight: 600;
+      font-size: 16px;
+    }
+    
+    .emergency-card {
+      grid-column: 1 / -1;
+      background: rgba(255, 72, 72, 0.2);
+      border: 1px solid rgba(255, 72, 72, 0.4);
+    }
+    
+    .emergency-card:hover {
+      background: rgba(255, 72, 72, 0.3);
+      animation: pulseEmergency 1.5s infinite;
+    }
+    
+    @keyframes pulseEmergency {
+      0% { box-shadow: 0 0 0 0 rgba(255, 72, 72, 0.4); }
+      70% { box-shadow: 0 0 0 10px rgba(255, 72, 72, 0); }
+      100% { box-shadow: 0 0 0 0 rgba(255, 72, 72, 0); }
+    }
+    
+    .notification-badge {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background: var(--accent);
+      color: var(--primary-dark);
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    
+    .menu-card-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+    
+    @media (max-width: 600px) {
+      .menu-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .page-title {
+        font-size: 26px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header>
+      <div class="logo">
+        <img src="Fire.png" alt="FireOps Logo">
+        <div class="logo-text">FIREOPS</div>
+      </div>
+      <div class="user-profile" onclick="navegar('perfil')">
+        👤
+      </div>
+    </header>
+    
+    <h1 class="page-title">Central de Controle</h1>
+    <p class="page-subtitle">Selecione uma opção para continuar</p>
+    
+    <div class="menu-grid">
+      <div class="menu-card" onclick="navegar('denuncia')">
+        <div class="menu-icon">📢</div>
+        <div class="menu-title">Fazer Denúncia</div>
+      </div>
+      
+      <div class="menu-card" onclick="navegar('mapa')">
+        <div class="menu-icon">🗺️</div>
+        <div class="menu-title">Mapa Interativo</div>
+      </div>
+      
+      <div class="menu-card-wrapper">
+        <div class="menu-card" onclick="navegar('chat')">
+          <div class="menu-icon">💬</div>
+          <div class="menu-title">Chat de Emergência</div>
+        </div>
+        <div class="notification-badge" id="chat-badge">3</div>
+      </div>
+      
+      <div class="menu-card" onclick="navegar('estatisticas')">
+        <div class="menu-icon">📊</div>
+        <div class="menu-title">Estatísticas</div>
+      </div>
+      
+      <div class="menu-card-wrapper">
+        <div class="menu-card" onclick="navegar('notificacoes')">
+          <div class="menu-icon">🔔</div>
+          <div class="menu-title">Notificações</div>
+        </div>
+        <div class="notification-badge" id="notifications-badge">5</div>
+      </div>
+      
+      <div class="menu-card emergency-card" onclick="navegar('emergencia')">
+        <div class="menu-icon">🚨</div>
+        <div class="menu-title">Emergência</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Função para navegação
+    function navegar(pagina) {
+      if (window.AndroidInterface && typeof window.AndroidInterface.postMessage === 'function') {
+        window.AndroidInterface.postMessage(`abrir:${pagina}`);
+      } else {
+        // Fallback para teste no navegador
+        window.location.href = `${pagina}.html`;
+      }
+    }
+    
+    // Atualizar badges (simulação - no Kodular você buscaria esses valores)
+    function atualizarBadges() {
+      // Simular notificações não lidas
+      const chatBadge = document.getElementById('chat-badge');
+      const notificationsBadge = document.getElementById('notifications-badge');
+      
+      // No Kodular, você buscaria esses valores assim:
+      // const chatCount = TinyDB1.GetValue("chat_unread_count") || 0;
+      // const notifCount = TinyDB1.GetValue("unread_notifications") || 0;
+      
+      // Simulação:
+      const chatCount = 3;
+      const notifCount = 5;
+      
+      chatBadge.textContent = chatCount;
+      notificationsBadge.textContent = notifCount;
+      
+      if (chatCount === 0) chatBadge.style.display = 'none';
+      if (notifCount === 0) notificationsBadge.style.display = 'none';
+    }
+    
+    // Carregar dados quando a página é aberta
+    document.addEventListener('DOMContentLoaded', atualizarBadges);
+    
+    // No Kodular, você pode atualizar em tempo real com:
+    // window.updateBadges = function(data) {
+    //   const counts = JSON.parse(data);
+    //   document.getElementById('chat-badge').textContent = counts.chat;
+    //   document.getElementById('notifications-badge').textContent = counts.notifications;
+    // };
+  </script>
+</body>
+</html>

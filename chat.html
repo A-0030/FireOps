@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chat - FireOps</title>
+  <style>
+    :root {
+      --primary: #263238;
+      --primary-dark: #1a2327;
+      --accent: #00e676;
+      --accent-dark: #00b248;
+      --text: #ffffff;
+      --text-secondary: #cfd8dc;
+      --card-bg: #37474f;
+      --input-bg: #455a64;
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', sans-serif;
+    }
+    
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+    
+    body {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    header {
+      background: var(--primary-dark);
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+      z-index: 10;
+    }
+    
+    .header-left {
+      display: flex;
+      align-items: center;
+    }
+    
+    .back-btn {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 20px;
+      margin-right: 15px;
+      cursor: pointer;
+    }
+    
+    .chat-info {
+      display: flex;
+      align-items: center;
+    }
+    
+    .chat-icon {
+      font-size: 24px;
+      margin-right: 10px;
+      color: var(--accent);
+    }
+    
+    .chat-title {
+      font-weight: 600;
+      font-size: 18px;
+    }
+    
+    .chat-status {
+      font-size: 12px;
+      color: var(--accent);
+      margin-top: 2px;
+    }
+    
+    #messages-container {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      background: var(--primary);
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .message {
+      max-width: 70%;
+      padding: 12px 16px;
+      border-radius: 18px;
+      margin-bottom: 15px;
+      position: relative;
+      animation: fadeIn 0.3s ease-out;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .message-sent {
+      align-self: flex-end;
+      background: var(--accent);
+      color: #000;
+      border-bottom-right-radius: 4px;
+    }
+    
+    .message-received {
+      align-self: flex-start;
+      background: var(--card-bg);
+      border-bottom-left-radius: 4px;
+    }
+    
+    .message-time {
+      font-size: 11px;
+      opacity: 0.7;
+      margin-top: 4px;
+      text-align: right;
+    }
+    
+    .message-sender {
+      font-weight: 600;
+      margin-bottom: 4px;
+      font-size: 14px;
+    }
+    
+    #message-form {
+      display: flex;
+      padding: 15px;
+      background: var(--primary-dark);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    #message-input {
+      flex: 1;
+      padding: 12px 16px;
+      border-radius: 24px;
+      border: none;
+      background: var(--input-bg);
+      color: var(--text);
+      font-size: 15px;
+      outline: none;
+    }
+    
+    #send-button {
+      background: var(--accent);
+      color: #000;
+      border: none;
+      border-radius: 50%;
+      width: 48px;
+      height: 48px;
+      margin-left: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+    
+    #send-button:hover {
+      background: var(--accent-dark);
+      transform: scale(1.05);
+    }
+    
+    #send-icon {
+      font-size: 20px;
+    }
+    
+    /* Animação de digitação */
+    .typing-indicator {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      background: var(--card-bg);
+      border-radius: 18px;
+      margin-bottom: 15px;
+      align-self: flex-start;
+    }
+    
+    .typing-dot {
+      width: 8px;
+      height: 8px;
+      background: var(--text-secondary);
+      border-radius: 50%;
+      margin: 0 2px;
+      animation: typingAnimation 1.4s infinite ease-in-out;
+    }
+    
+    .typing-dot:nth-child(1) {
+      animation-delay: 0s;
+    }
+    
+    .typing-dot:nth-child(2) {
+      animation-delay: 0.2s;
+    }
+    
+    .typing-dot:nth-child(3) {
+      animation-delay: 0.4s;
+    }
+    
+    @keyframes typingAnimation {
+      0%, 60%, 100% { transform: translateY(0); }
+      30% { transform: translateY(-5px); }
+    }
+    
+    /* Scrollbar personalizada */
+    #messages-container::-webkit-scrollbar {
+      width: 6px;
+    }
+    
+    #messages-container::-webkit-scrollbar-track {
+      background: rgba(255, 255, 255, 0.05);
+    }
+    
+    #messages-container::-webkit-scrollbar-thumb {
+      background: var(--accent);
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="header-left">
+      <button class="back-btn" onclick="navegar('menu')">←</button>
+      <div class="chat-info">
+        <div class="chat-icon">💬</div>
+        <div>
+          <div class="chat-title">Chat de Emergência</div>
+          <div class="chat-status" id="status-chat">Online</div>
+        </div>
+      </div>
+    </div>
+  </header>
+  
+  <div id="messages-container">
+    <!-- Mensagens serão adicionadas aqui dinamicamente -->
+    <div class="typing-indicator" id="typing-indicator" style="display: none;">
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+    </div>
+  </div>
+  
+  <form id="message-form">
+    <input 
+      type="text" 
+      id="message-input" 
+      placeholder="Digite sua mensagem..." 
+      autocomplete="off"
+    >
+    <button type="button" id="send-button" onclick="enviarMensagem()">
+      <span id="send-icon">↑</span>
+    </button>
+  </form>
+
+  <script>
+    // Função para navegação
+    function navegar(pagina) {
+      if (window.AndroidInterface && typeof window.AndroidInterface.postMessage === 'function') {
+        window.AndroidInterface.postMessage(`abrir:${pagina}`);
+      } else {
+        // Fallback para teste no navegador
+        window.location.href = `${pagina}.html`;
+      }
+    }
+    
+    // Função para enviar mensagem
+    function enviarMensagem() {
+      const input = document.getElementById('message-input');
+      const message = input.value.trim();
+      
+      if (message) {
+        // Adicionar mensagem localmente
+        adicionarMensagem(message, 'Você', true);
+        input.value = '';
+        
+        // Enviar para o Kodular
+        if (window.AndroidInterface && typeof window.AndroidInterface.postMessage === 'function') {
+          window.AndroidInterface.postMessage(`chat:${message}`);
+        } else {
+          // Simular resposta no navegador
+          setTimeout(() => {
+            adicionarMensagem('Mensagem recebida com sucesso', 'Sistema', false);
+          }, 1000);
+        }
+      }
+    }
+    
+    // Função para adicionar mensagem ao chat
+    function adicionarMensagem(texto, remetente, enviada) {
+      const messagesContainer = document.getElementById('messages-container');
+      const typingIndicator = document.getElementById('typing-indicator');
+      
+      // Criar elemento da mensagem
+      const messageElement = document.createElement('div');
+      messageElement.className = `message message-${enviada ? 'sent' : 'received'}`;
+      
+      // Se não for enviada por mim, mostrar remetente
+      if (!enviada) {
+        const senderElement = document.createElement('div');
+        senderElement.className = 'message-sender';
+        senderElement.textContent = remetente;
+        messageElement.appendChild(senderElement);
+      }
+      
+      // Adicionar texto da mensagem
+      const textElement = document.createElement('div');
+      textElement.textContent = texto;
+      messageElement.appendChild(textElement);
+      
+      // Adicionar horário
+      const timeElement = document.createElement('div');
+      timeElement.className = 'message-time';
+      timeElement.textContent = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+      messageElement.appendChild(timeElement);
+      
+      // Inserir antes do indicador de digitação
+      messagesContainer.insertBefore(messageElement, typingIndicator);
+      
+      // Rolagem automática para a nova mensagem
+      messageElement.scrollIntoView({ behavior: 'smooth' });
+    }
+    
+    // Enviar mensagem ao pressionar Enter
+    document.getElementById('message-input').addEventListener('keypress', function(e) {
+      if (e.key === 'Enter') {
+        e.preventDefault();
+        enviarMensagem();
+      }
+    });
+    
+    // No Kodular, você receberia mensagens assim:
+    // window.receiveMessage = function(data) {
+    //   const mensagem = JSON.parse(data);
+    //   adicionarMensagem(mensagem.texto, mensagem.remetente, false);
+    // };
+    
+    // Simular mensagens iniciais para demonstração
+    document.addEventListener('DOMContentLoaded', function() {
+      adicionarMensagem('Bem-vindo ao chat de emergência do FireOps!', 'Sistema', false);
+      adicionarMensagem('Por favor, descreva sua emergência.', 'Sistema', false);
+    });
+  </script>
+</body>
+</html>

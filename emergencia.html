@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Emergência - FireOps</title>
+  <style>
+    :root {
+      --primary: #c62828;
+      --primary-dark: #8e0000;
+      --accent: #ffeb3b;
+      --text: #ffffff;
+      --text-secondary: #ffcdd2;
+      --pulse-color: rgba(255, 235, 59, 0.6);
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Montserrat', Arial, sans-serif;
+    }
+    
+    @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700&display=swap');
+    
+    body {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: var(--text);
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+      overflow: hidden;
+    }
+    
+    .header {
+      position: absolute;
+      top: 20px;
+      left: 20px;
+    }
+    
+    .back-btn {
+      background: none;
+      border: none;
+      color: var(--text);
+      font-size: 24px;
+      cursor: pointer;
+    }
+    
+    .emergency-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      max-width: 500px;
+    }
+    
+    .emergency-title {
+      font-size: 32px;
+      font-weight: 700;
+      margin-bottom: 15px;
+      background: linear-gradient(to right, var(--text), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .emergency-subtitle {
+      font-size: 18px;
+      color: var(--text-secondary);
+      margin-bottom: 40px;
+      max-width: 80%;
+    }
+    
+    .emergency-button {
+      position: relative;
+      padding: 25px 50px;
+      font-size: 24px;
+      font-weight: 700;
+      background: var(--accent);
+      color: var(--primary-dark);
+      border: none;
+      border-radius: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      box-shadow: 0 10px 30px rgba(198, 40, 40, 0.5);
+      z-index: 5;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .emergency-button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 15px 40px rgba(198, 40, 40, 0.7);
+    }
+    
+    .emergency-button:active {
+      transform: scale(0.98);
+    }
+    
+    .pulse-effect {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 16px;
+      background: var(--pulse-color);
+      z-index: -1;
+      animation: pulse 2s infinite;
+      opacity: 0;
+    }
+    
+    @keyframes pulse {
+      0% {
+        transform: scale(0.95);
+        opacity: 0.7;
+      }
+      70% {
+        transform: scale(1.3);
+        opacity: 0;
+      }
+      100% {
+        transform: scale(0.95);
+        opacity: 0;
+      }
+    }
+    
+    .emergency-info {
+      margin-top: 40px;
+      font-size: 14px;
+      color: var(--text-secondary);
+      max-width: 80%;
+    }
+    
+    .confirmation-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 100;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .modal-content {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      border-radius: 20px;
+      padding: 40px 30px;
+      max-width: 400px;
+      width: 90%;
+      text-align: center;
+      border: 2px solid var(--accent);
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+      animation: modalFadeIn 0.4s;
+    }
+    
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .modal-icon {
+      font-size: 60px;
+      margin-bottom: 20px;
+      color: var(--accent);
+      animation: iconScale 1s infinite alternate;
+    }
+    
+    @keyframes iconScale {
+      from { transform: scale(1); }
+      to { transform: scale(1.1); }
+    }
+    
+    .modal-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 15px;
+    }
+    
+    .modal-text {
+      font-size: 16px;
+      margin-bottom: 25px;
+      line-height: 1.5;
+    }
+    
+    .modal-button {
+      padding: 15px 30px;
+      background: var(--accent);
+      color: var(--primary-dark);
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    
+    .modal-button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(255, 235, 59, 0.4);
+    }
+    
+    @media (max-width: 600px) {
+      .emergency-title {
+        font-size: 26px;
+      }
+      
+      .emergency-subtitle {
+        font-size: 16px;
+      }
+      
+      .emergency-button {
+        padding: 20px 40px;
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <button class="back-btn" onclick="navegar('menu')">←</button>
+  </div>
+  
+  <div class="emergency-content">
+    <h1 class="emergency-title">EMERGÊNCIA</h1>
+    <p class="emergency-subtitle">Use este botão apenas em situações críticas que exigem resposta imediata</p>
+    
+    <button class="emergency-button" onclick="chamarEmergencia()">
+      <span>🚨</span> CHAMAR BOMBEIROS
+      <div class="pulse-effect"></div>
+    </button>
+    
+    <p class="emergency-info">
+      Ao acionar, sua localização será enviada automaticamente para a central de emergências.
+    </p>
+  </div>
+  
+  <div class="confirmation-modal" id="confirmation-modal">
+    <div class="modal-content">
+      <div class="modal-icon">⚠️</div>
+      <h2 class="modal-title">SOCORRO ACIONADO!</h2>
+      <p class="modal-text">
+        Sua solicitação de emergência foi registrada com prioridade máxima. 
+        Nossa equipe já foi alertada e está a caminho.
+      </p>
+      <button class="modal-button" onclick="fecharModal()">ENTENDI</button>
+    </div>
+  </div>
+
+  <script>
+    // Função para navegação
+    function navegar(pagina) {
+      if (window.AndroidInterface && typeof window.AndroidInterface.postMessage === 'function') {
+        window.AndroidInterface.postMessage(`abrir:${pagina}`);
+      } else {
+        // Fallback para teste no navegador
+        window.location.href = `${pagina}.html`;
+      }
+    }
+    
+    // Chamar emergência
+    function chamarEmergencia() {
+      // Mostrar confirmação
+      document.getElementById('confirmation-modal').style.display = 'flex';
+      
+      // Enviar para o Kodular
+      if (window.AndroidInterface && typeof window.AndroidInterface.postMessage === 'function') {
+        window.AndroidInterface.postMessage('emergencia:chamar');
+        
+        // Obter localização se disponível
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const location = {
+                lat: position.coords.latitude,
+                lng: position.coords.longitude
+              };
+              window.AndroidInterface.postMessage(`emergencia:localizacao:${JSON.stringify(location)}`);
+            },
+            (error) => {
+              console.error("Erro ao obter localização:", error);
+            }
+          );
+        }
+      } else {
+        console.log("Emergência acionada (modo teste)");
+      }
+    }
+    
+    // Fechar modal
+    function fecharModal() {
+      document.getElementById('confirmation-modal').style.display = 'none';
+    }
+    
+    // Adicionar efeito de tecla de atalho (Shift+E para emergência)
+    document.addEventListener('keydown', function(e) {
+      if (e.shiftKey && e.key === 'E') {
+        chamarEmergencia();
+      }
+    });
+  </script>
+</body>
+</html>

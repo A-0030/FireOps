@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>FireOps - Proteção e Resgate</title>
+  <style>
+    :root {
+      --primary: #d32f2f;
+      --primary-dark: #9a0000;
+      --accent: #ffd700;
+      --accent-dark: #ffab00;
+      --text: #ffffff;
+      --text-dark: #2c2828;
+      --bg-gradient: linear-gradient(135deg, var(--primary), var(--primary-dark));
+    }
+    
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Rajdhani', 'Segoe UI', sans-serif;
+    }
+    
+    @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap');
+    
+    body {
+      background: var(--bg-gradient);
+      color: var(--text);
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    
+    .game-container {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 20px;
+    }
+    
+    .game-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: url('https://images.unsplash.com/photo-1605106702734-205df224ecce?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80') no-repeat center center;
+      background-size: cover;
+      opacity: 0.2;
+      z-index: 1;
+    }
+    
+    .game-content {
+      position: relative;
+      z-index: 2;
+      max-width: 800px;
+      width: 100%;
+    }
+    
+    .game-logo {
+      margin-bottom: 30px;
+      animation: pulse 2s infinite alternate;
+    }
+    
+    @keyframes pulse {
+      from { transform: scale(1); }
+      to { transform: scale(1.05); }
+    }
+    
+    .game-logo img {
+      height: 120px;
+    }
+    
+    .game-title {
+      font-size: clamp(2.5rem, 8vw, 4.5rem);
+      font-weight: 700;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      text-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
+      background: linear-gradient(to right, var(--text), var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    
+    .game-subtitle {
+      font-size: clamp(1rem, 3vw, 1.5rem);
+      margin-bottom: 40px;
+      text-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+      opacity: 0.9;
+    }
+    
+    .game-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      max-width: 300px;
+      margin: 0 auto;
+    }
+    
+    .game-btn {
+      padding: 18px 30px;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      text-align: center;
+      border: none;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+    
+    .game-btn-primary {
+      background: var(--accent);
+      color: var(--primary-dark);
+      box-shadow: 0 5px 15px rgba(255, 215, 0, 0.4);
+    }
+    
+    .game-btn-primary:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(255, 215, 0, 0.5);
+    }
+    
+    .game-btn-secondary {
+      background: transparent;
+      color: var(--text);
+      border: 3px solid var(--accent);
+    }
+    
+    .game-btn-secondary:hover {
+      background: rgba(255, 255, 255, 0.1);
+      transform: translateY(-5px);
+    }
+    
+    .game-particles {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+    
+    .game-footer {
+      position: absolute;
+      bottom: 20px;
+      left: 0;
+      width: 100%;
+      text-align: center;
+      font-size: 12px;
+      opacity: 0.7;
+    }
+    
+    @media (max-width: 768px) {
+      .game-buttons {
+        width: 100%;
+      }
+      
+      .game-btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="game-container">
+    <div class="game-bg"></div>
+    <div class="game-particles" id="particles-js"></div>
+    
+    <div class="game-content">
+      <div class="game-logo">
+        <img src="Fire.png" alt="FireOps Logo">
+      </div>
+      
+      <h1 class="game-title">FireOps</h1>
+      <p class="game-subtitle">Sistema de Emergência e Resgate</p>
+      
+      <div class="game-buttons">
+        <button class="game-btn game-btn-primary" onclick="navegarParaLogin()">
+          Iniciar Missão
+        </button>
+        <button class="game-btn game-btn-secondary" onclick="navegarParaCadastro()">
+          Novo Recruta
+        </button>
+      </div>
+    </div>
+    
+    <div class="game-footer">
+      © 2023 FireOps - Todos os direitos reservados
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+  <script>
+    // Configuração das partículas
+    if (typeof particlesJS !== 'undefined') {
+      particlesJS('particles-js', {
+        particles: {
+          number: { value: 80, density: { enable: true, value_area: 800 } },
+          color: { value: "#ffffff" },
+          shape: { type: "circle" },
+          opacity: { value: 0.3, random: true },
+          size: { value: 3, random: true },
+          line_linked: { enable: true, distance: 150, color: "#ffffff", opacity: 0.2, width: 1 },
+          move: { enable: true, speed: 2, direction: "none", random: true, straight: false, out_mode: "out" }
+        },
+        interactivity: {
+          detect_on: "canvas",
+          events: {
+            onhover: { enable: true, mode: "repulse" },
+            onclick: { enable: true, mode: "push" }
+          }
+        }
+      });
+    }
+    
+    function navegarParaLogin() {
+      if (window.AndroidInterface && typeof window.AndroidInterface.postMessage === 'function') {
+        window.AndroidInterface.postMessage('abrir:login');
+      } else {
+        window.location.href = 'Login.html';
+      }
+    }
+    
+    function navegarParaCadastro() {
+      if (window.AndroidInterface && typeof window.AndroidInterface.postMessage === 'function') {
+        window.AndroidInterface.postMessage('abrir:cadastro');
+      } else {
+        window.location.href = 'cadastro.html';
+      }
+    }
+  </script>
+</body>
+</html>
